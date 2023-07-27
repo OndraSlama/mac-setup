@@ -38,15 +38,6 @@ alias brewup="brew update; brew upgrade; brew cleanup; brew doctor"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-alias 3="python3.9"
-
-# micropython
-alias upy="screen /dev/tty.SLAB_USBtoUART 115200"
-
-# Adjust PATH
-# ---
-export PATH="/Users/lukasbenka/bin:/usr/local/sbin:$PATH"
-
 # pycurl
 export PYCURL_SSL_LIBRARY=openssl
 export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
@@ -55,10 +46,4 @@ export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
 
 export PATH="/usr/local/opt/python@3.8/bin:$PATH"
 
-alias lift="$HOME/Code/liftago_gmail_count/venv/bin/python $HOME/Code/liftago_gmail_count/liftago.py"
-alias drm_all="docker rm $(docker ps -a -q)"
-
 eval $(thefuck --alias)
-
-# dji mavic air to google photos timestamp fix
-alias exif_fix='exiftool "-MediaCreateDate<filemodifydate" "-MediaModifyDate<filemodifydate" "-TrackCreateDate<filemodifydate" "-TrackModifyDate<filemodifydate" "-CreateDate<filemodifydate" "-ModifyDate<filemodifydate" -tagsfromfile @ -mditemfscreationdate -overwrite_original -P -r . -ext .mp4' 

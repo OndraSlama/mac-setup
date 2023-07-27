@@ -1,42 +1,30 @@
-echo "get brew"
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-# activate brew 
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
-echo "install brew bundle"
+# install brew bundle
 brew bundle
 
-echo "install oh my zshell"
-rm -rf $HOME/.oh-my-zsh
+# install oh my zshell
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
-echo "mkfile for secrets" 
-touch $HOME/.secrets
-
-echo "link .zshrc"
-rm -f "$HOME/.zshrc" && ln -s "$HOME/Code/setup/home/.zshrc" $HOME && source "$HOME/.zshrc"
-
-echo "linking dotfiles"
-ln -s $HOME/Code/setup/home/.gitconfig $HOME/.gitconfig
-ln -s $HOME/Code/setup/home/.gitignore_global $HOME/.gitignore_global
-
-echo "setup nvm"
+echo "install nvm"
+# setup nvm
 nvm ls-remote | tail
 
-# # Install it (it should use it & set as default automatically)
-# nvm install v12.4.0
+# Install it (it should use it & set as default automatically)
+nvm install
 
 # Make sure
 nvm list
 nvm current
 
-# echo "setup shell visuals and activate"
-git clone https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
-ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+# setup shell visuals and activate
+npm i -g spaceship-prompt
 
-echo "adjust vim"
-git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
-sh ~/.vim_runtime/install_basic_vimrc.sh
+# For docker
+brew install colima
+brew install docker docker-compose
+mkdir -p ~/.docker/cli-plugins
+ln -sfn $(brew --prefix)/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
+
 
 # Close any open System Preferences panes, to prevent them from overriding settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
@@ -51,11 +39,13 @@ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 # Save screenshots to the desktop
-defaults write com.apple.screencapture location -string "$HOME/Desktop"
+defaults write com.apple.screencapture location -string "$HOME/Desktop/Screenshots"
 
 # Disable shadow in screenshots
 defaults write com.apple.screencapture disable-shadow -bool true
 
+# take screenshots as jpg (usually smaller size) and not png
+defaults write com.apple.screencapture type jpg
 
 # Default folder to $HOME
 defaults write com.apple.finder NewWindowTarget -string "PfHm"
@@ -73,6 +63,12 @@ defaults write com.apple.Finder AppleShowAllFiles -bool true
 
 # Show all filename extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+# show path bar
+defaults write com.apple.finder ShowPathbar -bool true
+
+# show status bar
+defaults write com.apple.finder ShowStatusBar -bool true
 
 # Disable the warning when changing a file extension
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
@@ -93,9 +89,6 @@ defaults write com.apple.dashboard mcx-disabled -boolean true
 # Disable the crash reporter
 defaults write com.apple.CrashReporter DialogType -string "none"
 
-# Require password immediately after sleep or screen saver begins
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 # Sleep the display after 5 minutes
 sudo pmset -a displaysleep 5
@@ -111,7 +104,7 @@ killall SystemUIServer
 defaults write com.apple.dock tilesize -int 45
 
 #Autohide Dock
-# defaults write com.apple.dock autohide -boolean true
+defaults write com.apple.dock autohide -boolean true
 
 # Minimalize effect scale
 defaults write com.apple.dock mineffect -string scale
@@ -127,10 +120,7 @@ for app in \
   "/System/Library/CoreServices/Finder.app" \
   "/System/Applications/Calendar.app" \
   "/Applications/Google Chrome.app" \
-  "/Applications/Firefox.app" \
   "/Applications/Slack.app" \
-  "/Applications/1Password 7.app" \
-  "/Applications/Spotify.app" \
   "/Applications/iTerm.app" \
   "/Applications/Visual Studio Code.app" \
   "/System/Applications/System Preferences.app" \
@@ -153,12 +143,33 @@ pip3 install pip-tools
 # New machine - new ssh key
 eval "$(ssh-agent -s)"
 
-ln -s $HOME/Code/setup/home/ssh_config $HOME/.ssh/config
-
-ssh-keygen -t rsa -b 4096 -C "benka.lukas@gmail.com"
+ssh-keygen -t rsa -b 4096 -C "ondrej.slama@rossum.ai"
 
 ssh-add -K ~/.ssh/id_rsa
 
+# GUI Applications
+brew install --cask \
+  google-chrome  \
+  iterm2 \
+  visual-studio-code \
+  docker \
+  rectangle \
+  slack \
+  discord \
+  vlc \
+  maccy \
+  unnaturalscrollwheels \
+  raycast
+
+# Terminal Applications
+brew install \
+  wget \
+  exa \
+  git \
+  graphicsmagick \
+  commitzen \
+  cmatrix \
+  fig
+
 # activate shell
 source "$HOME/.zshrc"
-
